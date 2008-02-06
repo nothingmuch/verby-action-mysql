@@ -6,7 +6,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Plan;
 use Test::MockObject;
 use Test::Deep;
 use Test::Exception;
@@ -19,11 +18,20 @@ use File::stat;
 my $dsn;
 my $dbh;
 BEGIN {
-    $dsn = $ENV{VERBY_TEST_MYSQL_DSN};
-    plan (
-        tests => 14,
-        ( need_module(qw/DBI DBD::mysql Time::Piece Time::Piece::MySQL/) && $dsn && eval { $dbh = DBI->connect($dsn, $ENV{VERBY_TEST_MYSQL_USER}, $ENV{VERBY_TEST_MYSQL_PASSWORD}); 1 } ),
-    );
+    if ( $dsn = $ENV{VERBY_TEST_MYSQL_DSN} ) {
+        local $@;
+        eval {
+            $dbh = DBI->connect(
+                $dsn,
+                $ENV{VERBY_TEST_MYSQL_USER},
+                $ENV{VERBY_TEST_MYSQL_PASSWORD}
+            );
+        };
+    }
+
+    plan skip_all => "Need VERBY_TEST_MYSQL_DSN to be set" unless $dbh;
+
+    plan tests => 14;
 }
 
 my $m;

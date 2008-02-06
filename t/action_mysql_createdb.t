@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
-use Test::Plan;
+use Test::More tests => 16;
 use Test::Exception;
 
 use Test::MockObject;
@@ -12,9 +11,9 @@ use Test::MockObject::Extends;
 use Hash::AsObject;
 use Sub::Override;
 
-BEGIN { plan tests => 16, [qw/ DBI DBD::Mock Sub::Override Time::Piece Time::Piece::MySQL/] }
+my $m;
 
-my $m; BEGIN { use_ok($m = "Verby::Action::Mysql::CreateDB") }
+use ok $m = "Verby::Action::Mysql::CreateDB";
 
 my $dbh = DBI->connect("dbi:Mock:", {});
 
